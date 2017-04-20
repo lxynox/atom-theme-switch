@@ -3,7 +3,7 @@
 Config =
   profiles:
     order: 1
-    description: 'list of "ui and syntax pair" used for `theme-switch:next`, `theme-switch:prev`'
+    description: 'list of "ui and syntax pair" used for `theme-switch:rand`'
     type: 'array'
     items:
       type: 'string'
@@ -15,7 +15,7 @@ Config =
     ]
   darkProfiles:
     order: 2
-    description: 'used for `theme-switch:next-dark`, `theme-switch:prev-dark`'
+    description: 'used for `theme-switch:rand-dark`'
     type: 'array'
     items:
       type: 'string'
@@ -25,7 +25,7 @@ Config =
     ]
   lightProfiles:
     order: 3
-    description: 'used for `theme-switch:next-light`, `theme-switch:prev-light`'
+    description: 'used for `theme-switch:rand-light`'
     type: 'array'
     items:
       type: 'string'
@@ -41,12 +41,9 @@ module.exports =
   activate: (state) ->
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'theme-switch:next': => @switch('next', 'profiles')
-      'theme-switch:prev': => @switch('prev', 'profiles')
-      'theme-switch:next-dark': => @switch('next', 'darkProfiles')
-      'theme-switch:prev-dark': => @switch('prev', 'darkProfiles')
-      'theme-switch:next-light': => @switch('next', 'lightProfiles')
-      'theme-switch:prev-light': => @switch('prev', 'lightProfiles')
+      'theme-switch:rand': => @switch('profiles')
+      'theme-switch:rand-dark': => @switch('darkProfiles')
+      'theme-switch:rand-light': => @switch('lightProfiles')
 
   deactivate: ->
     @subscriptions.dispose()
@@ -55,7 +52,7 @@ module.exports =
   equalProfile: (a, b) ->
     (a.length is b.length is 2) and (a[0] is b[0]) and (a[1] is b[1])
 
-  switch: (direction, profileName) ->
+  switch: (profileName) ->
     config = atom.config.get("theme-switch.#{profileName}")
     profiles = config.map((profile) -> profile.split(/\s+/))
     current = atom.config.get("core.themes")
@@ -66,13 +63,10 @@ module.exports =
       index = i
       break
 
-    # determine next/prev index
-    if index?
-      index += (if direction is 'next' then +1 else -1)
-      index = index % profiles.length
-      index = profiles.length + index if index < 0
-    else
-      index = 0
-
+    # determine random index
+    randIndex = Math.floor((profiles.length-1) * Math.random())
+    randIndex += 1 if randIndex >= index
+    index = randIndex
+    
     # update theme
     atom.config.set("core.themes", profiles[index])
