@@ -2,18 +2,15 @@
   "name": "theme-switch",
   "main": "./lib/main",
   "version": "0.4.0",
-  "description": "Switch theme quckly",
+  "description": "Switch theme randomly",
   "activationCommands": {
     "atom-workspace": [
-      "theme-switch:next",
-      "theme-switch:prev",
-      "theme-switch:next-dark",
-      "theme-switch:prev-dark",
-      "theme-switch:next-light",
-      "theme-switch:prev-light"
+      "theme-switch:rand",
+      "theme-switch:rand-dark",
+      "theme-switch:rand-light"
     ]
   },
-  "repository": "https://github.com/t9md/atom-theme-switch",
+  "repository": "https://github.com/lxynox/atom-theme-switch",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
